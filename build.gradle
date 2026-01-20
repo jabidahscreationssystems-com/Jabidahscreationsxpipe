@@ -28,8 +28,9 @@ allprojects { subproject ->
         mavenCentral()
         
         // Only use snapshot repository for SNAPSHOT builds
-        def isSnapshot = !System.getenv('RELEASE') && !System.getenv('STAGE')
-        if (isSnapshot) {
+        def isRelease = System.getenv('RELEASE') != null && Boolean.parseBoolean(System.getenv('RELEASE'))
+        def isStaging = System.getenv('STAGE') != null && Boolean.parseBoolean(System.getenv('STAGE'))
+        if (!isRelease && !isStaging) {
             maven {
                 url = uri("https://central.sonatype.com/repository/maven-snapshots")
             }
