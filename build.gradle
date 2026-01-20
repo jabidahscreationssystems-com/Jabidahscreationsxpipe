@@ -25,8 +25,14 @@ allprojects { subproject ->
     }
 
     repositories {
-        maven {
-            url = uri("https://central.sonatype.com/repository/maven-snapshots")
+        mavenCentral()
+        
+        // Only use snapshot repository for SNAPSHOT builds
+        def isSnapshot = !System.getenv('RELEASE') && !System.getenv('STAGE')
+        if (isSnapshot) {
+            maven {
+                url = uri("https://central.sonatype.com/repository/maven-snapshots")
+            }
         }
     }
 }
