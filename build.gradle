@@ -25,8 +25,17 @@ allprojects { subproject ->
     }
 
     repositories {
-        maven {
-            url = uri("https://central.sonatype.com/repository/maven-snapshots")
+        mavenCentral()
+        
+        // Only use snapshot repository for SNAPSHOT builds
+        // Note: These variables are redefined here because allprojects block is evaluated
+        // before project.ext (line 222+), so we cannot reuse isFullRelease/isStage from there
+        def isFullRelease = System.getenv('RELEASE') != null && Boolean.parseBoolean(System.getenv('RELEASE'))
+        def isStage = System.getenv('STAGE') != null && Boolean.parseBoolean(System.getenv('STAGE'))
+        if (!isFullRelease && !isStage) {
+            maven {
+                url = uri("https://central.sonatype.com/repository/maven-snapshots")
+            }
         }
     }
 }
